@@ -25,9 +25,9 @@ const Banner = () => {
     fetchData();
   }, []);
 
-  console.log(movie);
+  //   console.log(movie);
   //   console.log(movie.backdrop_path);
-  console.log(movie.overview);
+  //   console.log(movie.overview);
 
   //   function truncate(str, n) {
   //     return str.length > n ? str.substr(0, n - 1) + "..." : str;

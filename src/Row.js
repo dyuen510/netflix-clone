@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "./axios";
 import "./Row.css";
+import Youtube from "react-youtube";
+import movieTrailer from "movie-trailer";
 
 const base_url = "https://image.tmdb.org/t/p/original/";
 
 const Row = ({ title, fetchUrl, isLargeRow }) => {
   // state is like short term memory, when refreshed disappears
   const [movies, setMovies] = useState([]);
+  const [trailerUrl, setTrailerUrl] = useState("");
   //need to populate the movies with some stuff.
   // a snippet of code that runs based on a specific condition
   useEffect(() => {
@@ -25,7 +28,36 @@ const Row = ({ title, fetchUrl, isLargeRow }) => {
     fetchData();
   }, [fetchUrl]);
 
-  console.log(movies);
+  const opts = {
+    height: "390",
+    width: "100%",
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+    },
+  };
+
+  const handleClick = (movie) => {
+    if (trailerUrl) {
+      setTrailerUrl("");
+    } else {
+      //movieTrailer if name is passed it will try to find the trailer for it
+      movieTrailer(movie?.name || "")
+        .then((url) => {
+          //https://www.youtube.com/watch?v=XtMThy8QKqU
+          const urlParams = new URLSearchParams(new URL(url).search);
+          // console.log(urlParams.get("v"));
+          const getParams = urlParams.get("v");
+          console.log(getParams);
+          // setTrailerUrl(urlParams.get("v"));
+          // console.log(trailerUrl);
+        })
+        .catch((error) => console.log(error));
+    }
+    // console.log(trailerUrl);
+  };
+  // console.log(trailerUrl);
+  // console.log(movie.overview);
   //if you don't include fetchUrl in [], it won't rerender when fetchUrl is changed
 
   return (
@@ -39,6 +71,7 @@ const Row = ({ title, fetchUrl, isLargeRow }) => {
           <img
             //adding a unique key to each makes the scrolling faster.
             key={movie.id}
+            onClick={() => handleClick(movie)}
             className={`row_poster ${isLargeRow && "row_posterLarge"}`}
             src={`${base_url}${
               isLargeRow ? movie.poster_path : movie.backdrop_path
@@ -48,6 +81,8 @@ const Row = ({ title, fetchUrl, isLargeRow }) => {
         ))}
       </div>
       {/* container -> posters */}
+      {/* takes the video id and some options */}
+      {trailerUrl && <Youtube videoId={trailerUrl} opts={opts} />}
     </div>
   );
 };
