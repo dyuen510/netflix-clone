@@ -42,22 +42,23 @@ const Row = ({ title, fetchUrl, isLargeRow }) => {
       setTrailerUrl("");
     } else {
       //movieTrailer if name is passed it will try to find the trailer for it
-      movieTrailer(movie?.name || "")
+      movieTrailer(movie.name || "")
         .then((url) => {
           //https://www.youtube.com/watch?v=XtMThy8QKqU
           const urlParams = new URLSearchParams(new URL(url).search);
           // console.log(urlParams.get("v"));
           const getParams = urlParams.get("v");
-          console.log(getParams);
-          // setTrailerUrl(urlParams.get("v"));
-          // console.log(trailerUrl);
+          // console.log(getParams);
+          // console.log(getParams);
+          setTrailerUrl(urlParams.get("v"));
+          console.log(trailerUrl);
         })
         .catch((error) => console.log(error));
     }
     // console.log(trailerUrl);
   };
   // console.log(trailerUrl);
-  // console.log(movie.overview);
+  console.log(movies);
   //if you don't include fetchUrl in [], it won't rerender when fetchUrl is changed
 
   return (
